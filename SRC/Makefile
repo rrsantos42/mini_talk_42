@@ -1,36 +1,42 @@
-NAME	= servertest
+NAME    = server client
 
-HEADER	= minitalk.h
+HEADER  = minitalk.h
 
-SRCS 	=  $(wildcard Server/*c)
+SERVER_SRCS = Server/ft_server.c
+CLIENT_SRCS = Cliente/ft_cliente.c
 
-OBJS	= $(SRCS:c=o)
+SERVER_OBJS = $(SERVER_SRCS:Server/%.c=Server/%.o)
+CLIENT_OBJS = $(CLIENT_SRCS:Cliente/%.c=Cliente/%.o)
 
-CC		= gcc
+CC      = gcc
 
-CFLAGS	= -g -ggdb
-RM		= rm -f
+CFLAGS  = -g -ggdb
+RM      = rm -rf
 
-LIBFT 	= libft/libft.a
+LIBFT   = libft/libft.a
 
 LIBFT_DIR = libft
 
+.PHONY: all clean fclean re server client
+
 all: $(NAME)
 
-.SILENT: $(OBJS)
+.SILENT: $(SERVER_OBJS) $(CLIENT_OBJS)
 
-$(NAME): $(OBJS)
+server: $(SERVER_OBJS)
 	@make -C $(LIBFT_DIR) --silent
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L $(LIBFT_DIR) -lft
+	@$(CC) $(CFLAGS) -o $@ $^ -L $(LIBFT_DIR) -lft
+
+client: $(CLIENT_OBJS)
+	@make -C $(LIBFT_DIR) --silent
+	@$(CC) $(CFLAGS) -o $@ $^ -L $(LIBFT_DIR) -lft
 
 clean:
-	@rm -f $(OBJS)
+	@rm -f $(SERVER_OBJS) $(CLIENT_OBJS)
 	@make -s clean -C $(LIBFT_DIR)
 
 fclean: clean
 	@rm -f $(NAME)
 	@make -s fclean -C $(LIBFT_DIR)
-run:
-	make re && clear && ./servertest
 
 re: fclean all
