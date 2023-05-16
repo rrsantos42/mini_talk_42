@@ -1,4 +1,4 @@
-#include "../mini_talk.h"
+#include "mini_talk.h"
 
 int correct_message(int ac, char **av)
 {

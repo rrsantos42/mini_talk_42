@@ -1,5 +1,4 @@
-#include "../mini_talk.h"
-
+#include "mini_talk.h"
 
 char	*apend(char *bits, char c)
 {
