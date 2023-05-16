@@ -1,40 +1,24 @@
-NAME    = server client
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror
+LDFLAGS = -L./libft -lft
+INCLUDES = -I./libft
 
-HEADER  = minitalk.h
+all: client server
 
-SRCS    = ft_server.c ft_client.c
+client: ft_client.c mini_talk.h libft/libft.a
+	@$(CC) $(CFLAGS) $(INCLUDES) -o client ft_client.c $(LDFLAGS)
 
-OBJS    = $(SRCS:.c=.o)
+server: ft_server.c mini_talk.h libft/libft.a
+	@$(CC) $(CFLAGS) $(INCLUDES) -o server ft_server.c $(LDFLAGS)
 
-CC      = gcc
-
-CFLAGS  = -Wall -Wextra -Werror
-RM      = rm -f
-
-LIBFT   = libft/libft.a
-
-LIBFT_DIR = libft
-
-
-all: $(NAME)
-
-
-server: $(OBJS)
-	@make -C $(LIBFT_DIR)
-	@$(CC) $(CFLAGS) -o $@ $< -L $(LIBFT_DIR) -lft
-
-client: $(OBJS)
-	@make -C $(LIBFT_DIR)
-	@$(CC) $(CFLAGS) -o $@ $< -L $(LIBFT_DIR) -lft
+libft/libft.a:
+	@make -C libft
 
 clean:
-	@rm -f $(OBJS)
-	@make -s clean -C $(LIBFT_DIR)
+	@rm -f ft_client ft_server
+	@make -C libft clean
 
 fclean: clean
-	@rm -f $(NAME)
-	@make -s fclean -C $(LIBFT_DIR)
+	@make -C libft fclean
 
 re: fclean all
-
-.PHONY: all clean fclean re server client

@@ -1,46 +1,49 @@
 #include "mini_talk.h"
 
-int correct_message(int ac, char **av)
+int correct_input(int ac, char **av)
 {
         int	i;
 
-        if (ac != 3)
-            return (1);
         i = -1;
+        if (ac != 3)
+            return (0);
         while (av[1][++i])
         {
             if (!ft_isdigit((av[1][i])))
-                return (1);
+                return (0);
         }
-        return (0);
+        return (1);
 }
 
-void    send_len_in_bits(int pid, int size)
+void    send_size(int pid, int size)
 {
     int i;
 
-    i = 0;
-    while (i < 32)
+    i = -1;
+    while (++i < 32)
     {
-        if(size >> i++ & 1)
-            kill(pid, SIGUSR1);
-        else
-            kill(pid, SIGUSR2);
+            if (size & 0x01)
+                kill(pid, SIGUSR2);
+            else
+                kill(pid, SIGUSR1);
+            size = size >> 1;
+            usleep(100);
     }
 }
-void send_char(int pid, char c)
+void send_char(int pid, unsigned char c)
 {
     int i;
 
-    i = 0;
-    while (i < 8)
-    {
-        if(c >> i++ & 1)
-            kill(pid, SIGUSR1);
-        else
-            kill(pid, SIGUSR2);
-    }
-
+    i = -1;
+        while (++i < 8)
+        {
+            if (c & 0x01)
+                kill(pid, SIGUSR2);
+            else
+                kill(pid, SIGUSR1);
+            c = c >> 1;
+            usleep(100);
+        }
 }
 int main(int ac, char **av)
 {
@@ -49,16 +52,17 @@ int main(int ac, char **av)
     int		size;
     int i;
 
-
-    i =-1;
+    if (!(correct_input(ac, av)))
+        return(0);
+    i = -1;
     pid = ft_atoi(av[1]);
     if (pid <= 0)
         return (-1);
-    if (correct_message(ac, av))
-        return (-1);
     message = av[2];
     size = ft_strlen(message);
-    send_len_in_bits(pid , size);
-    while (++i < size)
-        send_char(pid, av[2][i]);
+    send_size(pid , size);
+    while (message[++i])
+        send_char(pid, message[i]);
+    send_char(pid, message[i] );
+    return (0);
 }
