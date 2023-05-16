@@ -57,15 +57,19 @@ static void	infoHandler(int sig)
         bits = NULL;
     }
 }
-int main(void)
+int	main(void)
 {
     int	id;
 
     id = (int)(getpid());
     ft_putnbr_fd(id, 1);
     ft_putchar_fd('\n', 1);
-    signal(SIGUSR1, infoHandler);
-    signal(SIGUSR2, infoHandler);
+
     while (1)
+    {
+        signal(SIGUSR1, infoHandler);
+        signal(SIGUSR2, infoHandler);
         usleep(100);
+    }
+    return (0);
 }

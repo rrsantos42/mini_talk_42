@@ -49,12 +49,13 @@ int main(int ac, char **av)
     int		size;
     int i;
 
+
     i =-1;
+    pid = ft_atoi(av[1]);
     if (pid <= 0)
         return (-1);
     if (correct_message(ac, av))
         return (-1);
-    pid = ft_atoi(av[1]);
     message = av[2];
     size = ft_strlen(message);
     send_len_in_bits(pid , size);
